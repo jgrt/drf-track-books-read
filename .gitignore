@@ -1,3 +1,6 @@
 /.idea/
 /venv/
 /data/
+/.env
+/src/src/.env
+**/**/migrations/
