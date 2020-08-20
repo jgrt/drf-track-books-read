@@ -1,0 +1,31 @@
+version: '2.3'
+
+services:
+
+  base:
+    image: library/postgres:latest
+    env_file:
+      - .env
+
+  db:
+    extends:
+      service: base
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+
+  drf:
+    build:
+      context: ./src
+      dockerfile: drf.dockerfile
+    links:
+      - db
+    volumes:
+    - ./src/:/src
+    ports:
+    - "80:80"
+    entrypoint: 'python manage.py runserver 0.0.0.0:80'
